@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon.com: Online Shopping (Clone)</title>
+    <meta name="description" content="A front-end Amazon clone built with HTML, CSS and vanilla JavaScript.">
+    <link rel="icon" href="images/logo.png">
+    <link rel="stylesheet" href="assets/fa/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <a class="skip-link" href="#products">Skip to products</a>
+
+    <header>
+        <div class="navbar">
+            <button class="nav-hamburger" id="hamburger" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+
+            <a class="nav-logo border" href="#" id="homeLink" aria-label="Amazon home">
+                <div class="logo"></div>
+            </a>
+
+            <button class="nav-address border" id="locBtn" data-action="loc" aria-label="Choose your delivery location">
+                <p class="add-first">Deliver to</p>
+                <div class="add-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <p class="add-sec" id="locLabel">India</p>
+                </div>
+            </button>
+
+            <form class="nav-search" id="searchForm" role="search" autocomplete="off">
+                <select class="search-select" id="searchCat" aria-label="Search department"></select>
+                <input placeholder="Search Amazon" class="search-input" id="searchInput" aria-label="Search Amazon"
+                    aria-autocomplete="list" aria-controls="suggest" maxlength="80">
+                <button type="submit" class="search-icon" aria-label="Search"><i
+                        class="fa-solid fa-magnifying-glass"></i></button>
+                <ul class="suggest" id="suggest" role="listbox" hidden></ul>
+            </form>
+
+            <div class="nav-signin border" id="account" tabindex="0">
+                <p><span id="helloLine">Hello, sign in</span></p>
+                <p class="nav-sec">Account &amp; Lists <i class="fa-solid fa-caret-down"></i></p>
+                <div class="account-menu" id="accountMenu"></div>
+            </div>
+
+            <button class="nav-return border" data-action="orders">
+                <p><span>Returns</span></p>
+                <p class="nav-sec">&amp; Orders</p>
+            </button>
+
+            <button class="nav-cart border" data-action="cart" aria-label="Cart">
+                <span class="cart-icon-wrap">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <b class="cart-count" id="cartCount">0</b>
+                </span>
+                <span class="cart-text">Cart</span>
+            </button>
+        </div>
+
+        <div class="panel">
+            <button class="panel-all border" id="allBtn">
+                <i class="fa-solid fa-bars"></i>
+                All
+            </button>
+            <div class="panel-ops" id="panelOps">
+                <p class="border" data-action="deals">Today's Deals</p>
+                <p class="border" data-action="service">Customer Service</p>
+                <p class="border" data-action="registry">Registry</p>
+                <p class="border" data-action="giftcards">Gift Cards</p>
+                <p class="border" data-action="sell">Sell</p>
+            </div>
+            <div class="panel-deals border" data-action="cat" data-cat="electronics">
+                Shop Deals in Electronics
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar (All menu) -->
+    <div class="scrim" id="scrim" hidden></div>
+    <aside class="side-drawer" id="sideDrawer" aria-hidden="true" aria-label="Menu">
+        <div class="side-head"><i class="fa-solid fa-circle-user"></i><span id="sideHello">Hello, sign in</span>
+            <button class="icon-btn" data-action="close-side" aria-label="Close menu"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="side-body" id="sideBody"></div>
+    </aside>
+
+    <main>
+        <!-- Hero carousel -->
+        <section class="hero-section" aria-label="Featured promotions" aria-roledescription="carousel">
+            <div class="hero-track" id="heroTrack"></div>
+            <button class="hero-arrow left" id="heroPrev" aria-label="Previous slide"><i
+                    class="fa-solid fa-chevron-left"></i></button>
+            <button class="hero-arrow right" id="heroNext" aria-label="Next slide"><i
+                    class="fa-solid fa-chevron-right"></i></button>
+            <div class="hero-dots" id="heroDots"></div>
+            <div class="hero-fade"></div>
+            <div class="hero-msg" id="heroMsg">
+                <p>You are on amazon.com. You can also shop on Amazon India for millions of products with fast local
+                    delivery. <a href="https://www.amazon.in" target="_blank" rel="noopener">Click here to go to amazon.in</a></p>
+                <button class="icon-btn" id="heroMsgClose" aria-label="Dismiss message"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+        </section>
+
+        <!-- Category cards -->
+        <div class="shop-content" id="categoryCards"></div>
+
+        <!-- Today's Deals -->
+        <section class="strip" id="deals" aria-labelledby="dealsTitle">
+            <div class="strip-head">
+                <h2 id="dealsTitle">Today's Deals</h2>
+                <span class="countdown" id="countdown" aria-live="off"><i class="fa-regular fa-clock"></i> Ends in <b>--:--:--</b></span>
+                <a href="#" class="see-all" data-action="all-products">See all deals</a>
+            </div>
+            <div class="strip-wrap">
+                <button class="strip-arrow left" data-action="strip-left" aria-label="Scroll left"><i class="fa-solid fa-chevron-left"></i></button>
+                <div class="strip-row" id="dealsRow"></div>
+                <button class="strip-arrow right" data-action="strip-right" aria-label="Scroll right"><i class="fa-solid fa-chevron-right"></i></button>
+            </div>
+        </section>
+
+        <!-- Product listing -->
+        <section class="listing" id="products" aria-label="Products">
+            <aside class="filters" id="filters"></aside>
+            <div class="results">
+                <div class="results-bar">
+                    <div>
+                        <h2 id="resultsTitle">All products</h2>
+                        <p class="muted" id="resultsCount"></p>
+                    </div>
+                    <div class="sort">
+                        <button class="filter-toggle" data-action="toggle-filters"><i class="fa-solid fa-filter"></i> Filters</button>
+                        <label for="sortSel">Sort by:</label>
+                        <select id="sortSel">
+                            <option value="featured">Featured</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="rating">Avg. Customer Review</option>
+                            <option value="discount">Biggest Discount</option>
+                            <option value="new">Newest Arrivals</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="grid" id="grid"></div>
+                <div class="more-wrap"><button class="btn btn-light" id="moreBtn">Show more results</button></div>
+            </div>
+        </section>
+
+        <section class="strip" id="recentSec" hidden aria-labelledby="recentTitle">
+            <div class="strip-head">
+                <h2 id="recentTitle">Your recently viewed items</h2>
+                <a href="#" class="see-all" data-action="clear-recent">Clear</a>
+            </div>
+            <div class="strip-row" id="recentRow"></div>
+        </section>
+    </main>
+
+    <footer>
+        <button class="foot-panel" id="toTop">
+            Back to top
+        </button>
+
+        <div class="foot-panel2">
+            <ul>
+                <p>Get to Know Us</p>
+                <a href="#" data-demo>Careers</a>
+                <a href="#" data-demo>Blog</a>
+                <a href="#" data-demo>About Amazon</a>
+                <a href="#" data-demo>Investor Relations</a>
+                <a href="#" data-demo>Amazon Devices</a>
+                <a href="#" data-demo>Amazon Science</a>
+            </ul>
+
+            <ul>
+                <p>Make Money with Us</p>
+                <a href="#" data-demo>Sell products on Amazon</a>
+                <a href="#" data-demo>Sell on Amazon Business</a>
+                <a href="#" data-demo>Sell apps on Amazon</a>
+                <a href="#" data-demo>Become an Affiliate</a>
+                <a href="#" data-demo>Advertise Your Products</a>
+                <a href="#" data-demo>Self-Publish with Us</a>
+                <a href="#" data-demo>Host an Amazon Hub</a>
+                <a href="#" data-demo>› See More Make Money with Us</a>
+            </ul>
+
+            <ul>
+                <p>Amazon Payment Products</p>
+                <a href="#" data-demo>Amazon Business Card</a>
+                <a href="#" data-demo>Shop with Points</a>
+                <a href="#" data-demo>Reload Your Balance</a>
+                <a href="#" data-demo>Amazon Currency Converter</a>
+            </ul>
+
+            <ul>
+                <p>Let Us Help You</p>
+                <a href="#" data-demo>Your Account</a>
+                <a href="#" data-action="orders">Your Orders</a>
+                <a href="#" data-demo>Shipping Rates &amp; Policies</a>
+                <a href="#" data-demo>Returns &amp; Replacements</a>
+                <a href="#" data-demo>Manage Your Content and Devices</a>
+                <a href="#" data-demo>Help</a>
+            </ul>
+        </div>
+
+        <div class="foot-panel3">
+            <div class="logo"></div>
+            <button class="foot-chip" data-action="loc"><i class="fa-solid fa-globe"></i> English</button>
+            <button class="foot-chip" data-action="loc"><i class="fa-solid fa-dollar-sign"></i> USD - U.S. Dollar</button>
+        </div>
+
+        <div class="foot-panel4">
+            <div class="pages">
+                <a href="#" data-demo>Conditions of Use</a>
+                <a href="#" data-demo>Privacy Notice</a>
+                <a href="#" data-demo>Your Ads Privacy Choices</a>
+            </div>
+            <div class="copyright">
+                © 1996-<span id="year">2025</span>, Amazon.com, Inc. or its affiliates &middot; Educational clone, not affiliated with Amazon
+            </div>
+        </div>
+    </footer>
+
+    <!-- Cart drawer -->
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true" aria-label="Shopping cart"></aside>
+
+    <!-- Generic modal -->
+    <div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-box" id="modalBox"></div>
+    </div>
+
+    <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+    <script src="products.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
